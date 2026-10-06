@@ -45,7 +45,7 @@
         .mix-box { padding: 8px 14px; background-color: #f8f9fa; display: flex; align-items: center; min-height: 38px; box-sizing: border-box; flex-shrink: 0; }
         .mix-container { display: flex; align-items: center; gap: 12px; width: 100%; }
         
-        /* 【パターン1対応】文字と画像アイコンが美しく横並びするバッジスタイル */
+        /* 文字と画像アイコンが美しく横並びするバッジスタイル */
         .badge-mix-weapon { background: #e3fafc; color: #0b7285; border: 1px solid #99e9f2; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; }
         .badge-mix-shield { background: #fff0f6; color: #c2255c; border: 1px solid #fcc2d7; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; }
         .badge-mix-both { background: #f3f0ff; color: #6741d9; border: 1px solid #d0bfff; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; }
@@ -116,14 +116,14 @@
     </div>
     <input type="number" id="priceInput" inputmode="numeric" pattern="[0-9]*" placeholder="値段識別はここに数字を入れてください">
     <div class="filter-group">
-        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 買値から探す</label>
-        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 売値から探す</label>
+        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 🔵 買値から探す</label>
+        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 🟠 売値から探す</label>
     </div>
     <div class="filter-group">
-        <label class="filter-label" style="color: #2b8a3e;"><input type="checkbox" id="blessedCheck" onchange="searchItems()"> 祝福のみ</label>
-        <label class="filter-label" style="color: #c92a2a;"><input type="checkbox" id="cursedCheck" onchange="searchItems()"> 呪いのみ</label>
+        <label class="filter-label" style="color: #2b8a3e;"><input type="checkbox" id="blessedCheck" onchange="searchItems()"> ✨ 祝福のみ</label>
+        <label class="filter-label" style="color: #c92a2a;"><input type="checkbox" id="cursedCheck" onchange="searchItems()"> 💀 呪いのみ</label>
     </div>
-    <button class="reset-btn" onclick="resetForm()">リセット</button>
+    <button class="reset-btn" onclick="resetForm()">🔄 リセット</button>
     <div id="resultArea" style="margin-top: 20px;"></div>
 </div>
 <script>
@@ -151,7 +151,7 @@ function changeCategory(category) {
 priceInput.addEventListener('input', searchItems);
 priceInput.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
 
-// データの改ざんを防ぐため、items.jsonから読み込む仕組みを100%継承
+// あなたのitems.jsonのみを読み込むクリーンな設計
 async function loadDatabase() {
     try {
         const response = await fetch('./items.json');
@@ -271,18 +271,18 @@ function displayResults(items, value, activeBuy, activeSell) {
 
     let html = '';
     if (isNaN(value)) {
-        html += `<h3>${currentCategory} 一覧</h3>`;
+        html += `<h3>🔍 ${currentCategory} 一覧</h3>`;
         items.forEach(item => html += renderItemRow(item, false));
     } else {
         const buyMatches = items.filter(i => i.matchType === '買値');
         const sellMatches = items.filter(i => i.matchType === '売値');
 
         if (activeBuy && buyMatches.length > 0) {
-            html += `<h3> 買値が ${value} ギタン</h3>`;
+            html += `<h3>💰 買値が ${value} ギタン</h3>`;
             buyMatches.forEach(item => html += renderItemRow(item, true));
         }
         if (activeSell && sellMatches.length > 0) {
-            html += `<h3> 売値が ${value} ギタン</h3>`;
+            html += `<h3>💰 売値が ${value} ギタン</h3>`;
             sellMatches.forEach(item => html += renderItemRow(item, true));
         }
     }
@@ -310,7 +310,8 @@ function renderItemRow(item, showMatchPrice) {
         pickupBadge = `<span class="badge badge-pickup-count">拾える回数 ${item.pickupText}</span>`;
     }
 
-    const alertNote = item.isNotOnFloor ? `<span class="highlight-alert"> 床落ちなし</span>` : '';
+    // 【修正完了】警告絵文字を「🚨（警告ランプ）」に変更して完全復活！
+    const alertNote = item.isNotOnFloor ? `<span class="highlight-alert">🚨 床落ちなし</span>` : '';
     let floorClass = item.isNotOnFloor ? 'hit-not-floor' : '';
     let priceDetails = '';
     let hitClass = 'hit-normal';
@@ -331,7 +332,6 @@ function renderItemRow(item, showMatchPrice) {
     const itemDesc = item.desc || "※アイテムの説明は未登録です。";
     const mixDescText = item.mixDesc || "---";
     
-    // 【修正・新デザイン】JSON内のmixTypeパラメータに基づき、パターン1（文字と画像アイコンの融合）で綺麗に描写
     let mixTypeHtml = '';
     const mType = item.mixType || item.mix; 
     if (item.isMixable || (mType && mType !== 'none')) {
@@ -363,7 +363,7 @@ function renderItemRow(item, showMatchPrice) {
                     ${priceDetails}
                 </div>
                 <span class="badge ${badgeClass}">${item.state}</span>
-                <span class="flip-guide"> タップで詳細</span>
+                <span class="flip-guide">💡 タップで詳細</span>
             </div>
             <div class="card-back">
                 <div class="desc-box">
