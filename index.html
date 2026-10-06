@@ -116,8 +116,8 @@
     </div>
     <input type="number" id="priceInput" inputmode="numeric" pattern="[0-9]*" placeholder="値段識別はここに数字を入れてください">
     <div class="filter-group">
-        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 🔵 買値から探す</label>
-        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 🟠 売値から探す</label>
+        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 🛒 買値から探す</label>
+        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 💰 売値から探す</label>
     </div>
     <div class="filter-group">
         <label class="filter-label" style="color: #2b8a3e;"><input type="checkbox" id="blessedCheck" onchange="searchItems()"> ✨ 祝福のみ</label>
@@ -310,7 +310,7 @@ function renderItemRow(item, showMatchPrice) {
         pickupBadge = `<span class="badge badge-pickup-count">拾える回数 ${item.pickupText}</span>`;
     }
 
-    // 【修正完了】警告絵文字を「🚨（警告ランプ）」に変更して完全復活！
+    // 床落ちなしバッジを「🚨（パトランプ）」に完全復元！
     const alertNote = item.isNotOnFloor ? `<span class="highlight-alert">🚨 床落ちなし</span>` : '';
     let floorClass = item.isNotOnFloor ? 'hit-not-floor' : '';
     let priceDetails = '';
