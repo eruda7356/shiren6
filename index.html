@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シレン6値段一覧表</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 20px; background-color: #f7f9fc; color: #333; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 24px; box-shadow: 0 8px 24px rgba(149, 157, 165, 0.15); }
+        h1 { font-size: 22px; margin-bottom: 20px; color: #ff6b6b; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .title-img { width: 28px; height: 38px; object-fit: contain; }
+        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+        .tab-btn { flex: 1 1 75px; padding: 10px 6px; font-size: 14px; background-color: #f1f3f5; color: #495057; border: none; border-radius: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: bold; transition: all 0.2s ease; }
+        .tab-icon { width: 20px; height: 20px; object-fit: contain; }
+        .tab-btn.active { background-color: #ff6b6b; color: white; transform: scale(1.05); box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); }
+        input[type="number"] { width: 100%; padding: 14px 16px; margin: 8px 0; box-sizing: border-box; font-size: 16px; border: 2px solid #e9ecef; border-radius: 16px; outline: none; background-color: #fafbfc; -moz-appearance: textfield; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .filter-group { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; padding: 12px 16px; justify-content: center; background-color: #fafbfc; border-radius: 16px; border: 1px dashed #e9ecef; }
+        .filter-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; cursor: pointer; user-select: none; padding: 6px 8px; }
+        .filter-label input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #ff6b6b; }
+        .reset-btn { width: 100%; padding: 14px; margin: 8px 0; box-sizing: border-box; font-size: 16px; background-color: #adb5bd; color: white; border: none; border-radius: 16px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
+        .reset-btn:active { background-color: #868e96; }
+        h3 { font-size: 16px; color: #495057; margin-top: 25px; border-bottom: 3px solid #ffe3e3; padding-bottom: 6px; display: inline-block; }
+        .result-card { perspective: 1000px; margin-bottom: 8px; min-height: 72px; }
+        .card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .result-card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; box-sizing: border-box; }
+        .card-front { padding: 14px 14px 22px 14px; border: 1px solid #f1f3f5; display: flex; align-items: center; background-color: white; position: relative; color: #333; }
+        
+        .hit-normal .card-front { border: 1px solid #f1f3f5; background-color: white; }
+        .hit-blessed .card-front { border: 3px solid #fab005; background-color: #fff9db; color: #212529; } 
+        .hit-cursed .card-front { border: 3px solid #212529; background-color: #343a40; color: #f8f9fa; }  
+        .hit-cursed .badge-pickup-count { background: #212529; color: #ff8787; border: 1px solid #495057; }
+        
+        /* 【新機能】床落ちなしの時に、カードの正面背景を薄い赤ピンクにし、左端に赤い縦線を引いて目立たせる */
+        .hit-not-floor .card-front { background-color: #fff5f5 !important; border-left: 6px solid #e03131 !important; }
+        .hit-not-floor.hit-blessed .card-front { border-color: #fab005; border-left: 6px solid #e03131 !important; }
+        .hit-not-floor.hit-cursed .card-front { border-color: #212529; border-left: 6px solid #e03131 !important; color: #212529 !important; }
+        .hit-not-floor.hit-cursed .price-buy, .hit-not-floor.hit-cursed .price-sell { color: #495057 !important; }
+
+        .flip-guide { position: absolute; bottom: 4px; right: 12px; font-size: 10px; color: #adb5bd; font-weight: bold; pointer-events: none; }
+        .card-back { position: absolute; top: 0; left: 0; background-color: #e9ecef; border: 1px solid #dee2e6; transform: rotateY(180deg); display: flex; flex-direction: column; overflow: hidden; height: 100%; width: 100%; box-sizing: border-box; }
+        .desc-box { flex: 1; padding: 10px 14px; background-color: #ffffff; overflow-y: auto; border-bottom: 1px solid #dee2e6; display: flex; align-items: flex-start; min-height: 0; }
+        .item-description { font-size: 13px; line-height: 1.4; color: #495057; font-weight: 500; word-break: break-all; white-space: pre-wrap; }
+        .mix-box { padding: 8px 14px; background-color: #f8f9fa; display: flex; align-items: center; min-height: 38px; box-sizing: border-box; flex-shrink: 0; }
+        .mix-container { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .badge-mix-weapon { background: #e3fafc; color: #0b7285; border: 1px solid #99e9f2; padding: 3px 6px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-mix-shield { background: #fff0f6; color: #c2255c; border: 1px solid #fcc2d7; padding: 3px 6px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-mix-both { background: #f3f0ff; color: #6741d9; border: 1px solid #d0bfff; padding: 3px 6px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .mix-label { background-color: #ffffff; padding: 1px 4px; border-radius: 12px; font-size: 9.5px; white-space: nowrap; }
+        .badge-mix-weapon .mix-label { border: 1px solid #b2f2bb; color: #0b7285; }
+        .badge-mix-shield .mix-label { border: 1px solid #ffdeeb; color: #c2255c; }
+        .badge-mix-both .mix-label { border: 1px solid #e5dbff; color: #6741d9; }
+        .badge-img { width: 14px; height: 14px; object-fit: contain; }
+        .mix-effect-text { font-size: 12px; color: #212529; font-weight: bold; }
+        .marker-normal { background-color: #fff3bf; padding: 2px 6px; font-weight: 800; border-radius: 6px; color: #212529; display: inline-block; }
+        .marker-blessed { background-color: #c3fae8; padding: 2px 6px; font-weight: 800; border-radius: 6px; color: #0b7285; display: inline-block; }
+        .marker-cursed { background-color: #ff8787; padding: 2px 6px; font-weight: 800; border-radius: 6px; color: #212529; display: inline-block; }
+        
+        /* 【新機能】床落ちなしの警告バッジを赤背景×白文字で高コントラストに目立たせる設定 */
+        .highlight-alert { background: #e03131; padding: 3px 8px; color: white; font-weight: bold; border-radius: 20px; margin-left: 6px; font-size: 11px; display: inline-block; box-shadow: 0 2px 6px rgba(224, 49, 49, 0.2); }
+        
+        .item-icon { width: 36px; height: 36px; margin-right: 14px; object-fit: contain; }
+        .item-info { flex-grow: 1; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; margin-right: 6px; font-weight: bold; display: inline-block; margin-bottom: 4px; }
+        .badge-normal { background: #e9ecef; color: #495057; }
+        .badge-blessed { background: #fab005; color: white; }
+        .badge-cursed { background: #212529; color: #ff8787; border: 1px solid #495057; }
+        .badge-pickup-count { background: #e6fcf5; color: #0ca678; border: 1px solid #96f2d7; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        <img src="images/tensyu.png" class="title-img" onerror="this.style.display='none'">
+        シレン6 値段一覧表
+        <img src="images/tensyu.png" class="title-img" onerror="this.style.display='none'">
+    </h1>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="changeCategory('草')"><img src="images/kusa.png" class="tab-icon" onerror="this.style.display='none'">草</button>
+        <button class="tab-btn" onclick="changeCategory('巻物')"><img src="images/makimono.png" class="tab-icon" onerror="this.style.display='none'">巻物</button>
+        <button class="tab-btn" onclick="changeCategory('杖')"><img src="images/tue.png" class="tab-icon" onerror="this.style.display='none'">杖</button>
+        <button class="tab-btn" onclick="changeCategory('腕輪')"><img src="images/udawa.png" class="tab-icon" onerror="this.style.display='none'">腕輪</button>
+        <button class="tab-btn" onclick="changeCategory('壺')"><img src="images/tubo.png" class="tab-icon" onerror="this.style.display='none'">壺</button>
+    </div>
+    <input type="number" id="priceInput" inputmode="numeric" pattern="[0-9]*" placeholder="値段識別はここに数字を入れてください">
+    <div class="filter-group">
+        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 🛒 買値から探す</label>
+        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 💰 売値から探す</label>
+    </div>
+    <div class="filter-group">
+        <label class="filter-label" style="color: #2b8a3e;"><input type="checkbox" id="blessedCheck" onchange="searchItems()"> ✨ 祝福のみ</label>
+        <label class="filter-label" style="color: #c92a2a;"><input type="checkbox" id="cursedCheck" onchange="searchItems()"> 💀 呪いのみ</label>
+    </div>
+    <button class="reset-btn" onclick="resetForm()">リセット</button>
+    <div id="resultArea" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+let itemDatabase = [];
+const priceInput = document.getElementById('priceInput');
+const searchBuyCheck = document.getElementById('searchBuyCheck');
+const searchSellCheck = document.getElementById('searchSellCheck');
+const blessedCheck = document.getElementById('blessedCheck');
+const cursedCheck = document.getElementById('cursedCheck');
+const resultArea = document.getElementById('resultArea');
+let currentCategory = '草';
+
+function changeCategory(category) {
+    currentCategory = category;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.innerText.includes(category)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    searchItems();
+}
+
+priceInput.addEventListener('input', searchItems);
+priceInput.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
+
+async function loadDatabase() {
+    try {
+        const response = await fetch('./items.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        itemDatabase = await response.json();
+        searchItems();
+    } catch (error) {
+        resultArea.innerHTML = `<p style="color:red; text-align:center;">データの読み込みに失敗しました。</p>`;
+    }
+}
+function searchItems() {
+    const value = parseInt(priceInput.value);
+    const filterBuy = searchBuyCheck.checked;
+    const filterSell = searchSellCheck.checked;
+    const showBlessed = blessedCheck.checked;
+    const showCursed = cursedCheck.checked;
+
+    const activeBuy = (!filterBuy && !filterSell) ? true : filterBuy;
+    const activeSell = (!filterBuy && !filterSell) ? true : filterSell;
+
+    if (isNaN(value)) {
+        let defaultList = [];
+        itemDatabase.forEach(item => {
+            if (typeof item === 'string' || item.type !== currentCategory) return;
+            const pMin = item.min !== undefined ? parseInt(item.min) : 3;
+            const pMax = item.max !== undefined ? parseInt(item.max) : 5;
+            const pickupText = (item.type === '杖' || item.type === '壺') ? `${pMin}~${pMax}` : null;
+
+            if (!showBlessed && !showCursed) {
+                defaultList.push({ ...item, displayName: item.name, state: '通常', calcBuy: item.buy, calcSell: item.sell, isMixable: !!item.mix, isPredicted: false, pickupText: pickupText, isDefaultShow: !!pickupText });
+            }
+            if (showBlessed && (item.type === '草' || item.type === '巻物')) {
+                defaultList.push({ ...item, displayName: item.name, state: '祝福', calcBuy: item.buy * 2, calcSell: item.sell * 2, isMixable: !!item.mix, isPredicted: false, pickupText: pickupText, isDefaultShow: false });
+            }
+            if (showCursed) {
+                let cBuy, cSell;
+                if (item.type === '杖') {
+                    cBuy = Math.floor((item.buy + (100 * pMin)) * 0.87);
+                    cSell = Math.floor((item.sell + (40 * pMin)) * 0.87);
+                } else if (item.type === '壺') {
+                    cBuy = Math.floor((item.buy + (100 * pMin)) * 0.87);
+                    cSell = Math.floor((item.sell + (40 * pMin)) * 0.87);
+                } else {
+                    cBuy = Math.floor(item.buy * 0.87);
+                    cSell = Math.floor(item.sell * 0.87);
+                }
+                defaultList.push({ ...item, displayName: item.name, state: '呪い', calcBuy: cBuy, calcSell: cSell, isMixable: !!item.mix, isPredicted: false, pickupText: pickupText, isDefaultShow: !!pickupText });
+            }
+        });
+        displayResults(defaultList, value, activeBuy, activeSell);
+        return;
+    }
+
+    let results = [];
+    itemDatabase.forEach(item => {
+        if (typeof item === 'string' || item.type !== currentCategory) return;
+        const isMixable = !!item.mix;
+        const pMin = item.min !== undefined ? parseInt(item.min) : 3;
+        const pMax = item.max !== undefined ? parseInt(item.max) : 5;
+        const pickupText = `${pMin}~${pMax}`;
+
+        if (item.type === '杖') {
+            const cleanName = item.name.replace(/\(\d+\)/, '');
+            const baseBuy = item.buy;
+            const baseSell = item.sell;
+
+            for (let c = 0; c <= 7; c++) {
+                const nBuy = baseBuy + (100 * c);
+                const nSell = baseSell + (40 * c);
+                const cBuy = Math.floor(nBuy * 0.87);
+                const cSell = Math.floor(nSell * 0.87);
+                const isWithinRange = (c >= pMin && c <= pMax);
+
+                if (!showCursed && !showBlessed && ((activeBuy && nBuy === value) || (activeSell && nSell === value))) {
+                    results.push({ ...item, displayName: `${cleanName}(${c})`, state: '通常', calcBuy: nBuy, calcSell: nSell, matchType: nBuy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, pickupText: pickupText, isDefaultShow: true, isNotOnFloor: !isWithinRange });
+                }
+                if (!showBlessed && ((activeBuy && cBuy === value) || (activeSell && cSell === value))) {
+                    results.push({ ...item, displayName: `${cleanName}(${c})`, state: '呪い', calcBuy: cBuy, calcSell: cSell, matchType: cBuy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, pickupText: pickupText, isDefaultShow: true, isNotOnFloor: !isWithinRange });
+                }
+            }
+        } else if (item.type === '壺') {
+            const cleanName = item.name.replace(/\(\d+\)/, '');
+            const baseBuy = item.buy;
+            const baseSell = item.sell;
+
+            for (let cap = 0; cap <= 6; cap++) {
+                const nBuy = baseBuy + (100 * cap);
+                const nSell = baseSell + (40 * cap);
+                const cBuy = Math.floor(nBuy * 0.87);
+                const cSell = Math.floor(nSell * 0.87);
+                const isWithinRange = (cap >= pMin && cap <= pMax);
+
+                if (!showCursed && !showBlessed && ((activeBuy && nBuy === value) || (activeSell && nSell === value))) {
+                    results.push({ ...item, displayName: `${cleanName}(${cap})`, state: '通常', calcBuy: nBuy, calcSell: nSell, matchType: nBuy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, pickupText: pickupText, isDefaultShow: true, isNotOnFloor: !isWithinRange });
+                }
+                if (!showBlessed && ((activeBuy && cBuy === value) || (activeSell && cSell === value))) {
+                    results.push({ ...item, displayName: `${cleanName}(${cap})`, state: '呪い', calcBuy: cBuy, calcSell: cSell, matchType: cBuy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, pickupText: pickupText, isDefaultShow: true, isNotOnFloor: !isWithinRange });
+                }
+            }
+        } else {
+            const bBuy = item.buy * 2;
+            const bSell = item.sell * 2;
+            const cBuy = Math.floor(item.buy * 0.87);
+            const cSell = Math.floor(item.sell * 0.87);
+
+            if (!showCursed && !showBlessed && ((activeBuy && item.buy === value) || (activeSell && item.sell === value))) {
+                results.push({ ...item, displayName: item.name, state: '通常', calcBuy: item.buy, calcSell: item.sell, matchType: item.buy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, isDefaultShow: false });
+            }
+            if (!showCursed && item.type !== '腕輪' && ((activeBuy && bBuy === value) || (activeSell && bSell === value))) {
+                results.push({ ...item, displayName: item.name, state: '祝福', calcBuy: bBuy, calcSell: bSell, matchType: bBuy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, isDefaultShow: false });
+            }
+            if (!showBlessed && ((activeBuy && cBuy === value) || (activeSell && cSell === value))) {
+                results.push({ ...item, displayName: item.name, state: '呪い', calcBuy: cBuy, calcSell: cSell, matchType: cBuy === value ? '買値' : '売値', isMixable: isMixable, isPredicted: false, isDefaultShow: false });
+            }
+        }
+    });
+    displayResults(results, value, activeBuy, activeSell);
+}
+function displayResults(items, value, activeBuy, activeSell) {
+    if (items.length === 0) {
+        resultArea.innerHTML = `<p style="text-align:center; color:#868e96; margin-top:20px;">一致する道具が見つかりませんでした。</p>`;
+        return;
+    }
+
+    // 【新機能】床落ちしている正常なアイテム（isNotOnFloor が false）を上に、床落ちなしを下に自動ソート
+    items.sort((a, b) => (a.isNotOnFloor === b.isNotOnFloor) ? 0 : a.isNotOnFloor ? 1 : -1);
+
+    let html = '';
+    if (isNaN(value)) {
+        html += `<h3>${currentCategory} 一覧</h3>`;
+        items.forEach(item => html += renderItemRow(item, false));
+    } else {
+        const buyMatches = items.filter(i => i.matchType === '買値');
+        const sellMatches = items.filter(i => i.matchType === '売値');
+
+        if (activeBuy && buyMatches.length > 0) {
+            html += `<h3>🛒 買値が ${value} ギタン</h3>`;
+            buyMatches.forEach(item => html += renderItemRow(item, true));
+        }
+        if (activeSell && sellMatches.length > 0) {
+            html += `<h3>💰 売値が ${value} ギタン</h3>`;
+            sellMatches.forEach(item => html += renderItemRow(item, true));
+        }
+    }
+    resultArea.innerHTML = html;
+}
+
+function renderItemRow(item, showMatchPrice) {
+    let badgeClass = 'badge-normal';
+    if (item.state === '祝福') badgeClass = 'badge-blessed';
+    if (item.state === '呪い') badgeClass = 'badge-cursed';
+
+    let iconName = 'kusa.png';
+    if (item.type === '武器') iconName = 'buki.png';
+    else if (item.type === '盾') iconName = 'tate.png';
+    else if (item.icon) iconName = item.icon;
+    else {
+        if (item.type === '巻物') iconName = 'makimono.png';
+        if (item.type === '杖') iconName = 'tue.png';
+        if (item.type === '腕輪') iconName = 'udawa.png';
+        if (item.type === '壺') iconName = 'tubo.png';
+    }
+
+    const fullIconPath = `images/${iconName}`;
+    let pickupBadge = '';
+    if (item.pickupText && (item.isPredicted || item.isDefaultShow)) {
+        pickupBadge = `<span class="badge badge-pickup-count">拾える回数 ${item.pickupText}</span>`;
+    }
+
+    // 【修正】床落ちなしの警告文をバッジ形式にして視認性を大幅強化
+    const alertNote = item.isNotOnFloor ? `<span class="highlight-alert">🚨 床落ちなし</span>` : '';
+    
+    // 【新機能】床落ちなしの場合、カード正面のクラス（hit-not-floor）を追加付与する
+    let floorClass = item.isNotOnFloor ? 'hit-not-floor' : '';
+    let priceDetails = '';
+    let hitClass = 'hit-normal';
+
+    if (showMatchPrice) {
+        let markerClass = 'marker-normal';
+        if (item.state === '祝福') { markerClass = 'marker-blessed'; hitClass = 'hit-blessed'; }
+        if (item.state === '呪い') { markerClass = 'marker-cursed'; hitClass = 'hit-cursed'; }
+
+        const buyText = item.matchType === '買値' ? `<span class="${markerClass}">買値: ${item.calcBuy} G</span>` : `<span style="margin: 0 4px;">買値: ${item.calcBuy} G</span>`;
+        const sellText = item.matchType === '売値' ? `<span class="${markerClass}">売値: ${item.calcSell} G</span>` : `<span style="margin: 0 4px;">売値: ${item.calcSell} G</span>`;
+        const textColorStyle = (item.state === '呪い' && !item.isNotOnFloor) ? 'style="color:#ced4da;"' : '';
+        priceDetails = `<div style="font-size:12px; color:#868e96; display:flex; align-items:center; flex-wrap:wrap; margin-top:6px;" ${textColorStyle}>${buyText} <span style="color:#adb5bd; margin:0 4px;">/</span> ${sellText}${alertNote}</div>`;
+    } else {
+        priceDetails = `<div style="font-size:12px; color:#868e96; margin-top:4px;">買値: ${item.calcBuy} G / 売値: ${item.calcSell} G ${alertNote}</div>`;
+    }
+
+    const itemDesc = item.desc || "※アイテムの説明は未登録です。";
+    const mixDescText = item.mixDesc || "---";
+    
+    let mixTypeHtml = '';
+    if (item.isMixable || item.mixType) {
+        if (item.mixType === '武器' || item.mixType === 'weapon') {
+            mixTypeHtml = `<span class="badge-mix-weapon"><span class="mix-label">異種合成</span> <img src="images/buki.png" class="badge-img" onerror="this.style.display='none'"> 武器</span>`;
+        } else if (item.mixType === '盾' || item.mixType === 'shield') {
+            mixTypeHtml = `<span class="badge-mix-shield"><span class="mix-label">異種合成</span> <img src="images/tate.png" class="badge-img" onerror="this.style.display='none'"> 盾</span>`;
+        } else if (item.mixType === '両方' || item.mixType === 'both') {
+            mixTypeHtml = `<span class="badge-mix-both"><span class="mix-label">異種合成</span> <img src="images/buki.png" class="badge-img" onerror="this.style.display='none'"> 武器 <img src="images/tate.png" class="badge-img" onerror="this.style.display='none'"> 盾</span>`;
+        } else {
+            mixTypeHtml = `<span class="badge-mix-both" style="background:#e8dbff; color:#6f42c1; border-color:#d0bfff;"><span class="mix-label" style="border-color:#bdf0ff; color:#6f42c1;">異種合成</span> 異種</span>`;
+        }
+    } else {
+        mixTypeHtml = `<span style="font-size:11px; color:#adb5bd; font-weight:bold; white-space:nowrap; flex-shrink:0;">! 合成不可</span>`;
+    }
+
+    const frontMixBadge = (item.isMixable || item.mixType) ? mixTypeHtml : '';
+
+    return `
+    <div class="result-card ${hitClass} ${floorClass}" id="card-${item.name}">
+        <div class="card-inner" onclick="handleCardClick(this)">
+            <div class="card-front">
+                <img src="${fullIconPath}" class="item-icon" onerror="this.style.display='none'">
+                <div class="item-info">
+                    <div style="font-weight:bold; font-size:15px; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                        <span>${item.displayName}</span>
+                        ${frontMixBadge}
+                        ${pickupBadge}
+                    </div>
+                    ${priceDetails}
+                </div>
+                <span class="badge ${badgeClass}">${item.state}</span>
+                <span class="flip-guide">💡 タップで詳細</span>
+            </div>
+            <div class="card-back">
+                <div class="desc-box">
+                    <div class="item-description">${itemDesc}</div>
+                </div>
+                <div class="mix-box">
+                    <div class="mix-container">
+                        ${mixTypeHtml}
+                        <div class="mix-effect-text">${mixDescText}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+function handleCardClick(cardInner) {
+    const card = cardInner.parentElement;
+    if (card) {
+        card.classList.toggle('is-flipped');
+    }
+}
+
+function resetForm() {
+    priceInput.value = '';
+    searchBuyCheck.checked = false;
+    searchSellCheck.checked = false;
+    blessedCheck.checked = false;
+    cursedCheck.checked = false;
+    searchItems();
+}
+
+loadDatabase();
+</script>
+</body>
+</html>
