@@ -25,14 +25,14 @@
         .card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
         .result-card.is-flipped .card-inner { transform: rotateY(180deg); }
         .card-front, .card-back { width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; box-sizing: border-box; }
-        .card-front { padding: 14px 14px 22px 14px; border: 1px solid #f1f3f5; display: flex; align-items: center; background-color: white; position: relative; color: #333; }
+        /* 右側に広めの余白を確保してバッジとの衝突を完全ガード */
+        .card-front { padding: 14px 65px 22px 14px; border: 1px solid #f1f3f5; display: flex; align-items: center; background-color: white; position: relative; color: #333; }
         
         .hit-normal .card-front { border: 1px solid #f1f3f5; background-color: white; }
         .hit-blessed .card-front { border: 3px solid #fab005; background-color: #fff9db; color: #212529; } 
         .hit-cursed .card-front { border: 3px solid #212529; background-color: #343a40; color: #f8f9fa; }  
         .hit-cursed .badge-pickup-count { background: #212529; color: #ff8787; border: 1px solid #495057; }
         
-        /* 【新機能】床落ちなしの時に、カードの正面背景を薄い赤ピンクにし、左端に赤い縦線を引いて目立たせる */
         .hit-not-floor .card-front { background-color: #fff5f5 !important; border-left: 6px solid #e03131 !important; }
         .hit-not-floor.hit-blessed .card-front { border-color: #fab005; border-left: 6px solid #e03131 !important; }
         .hit-not-floor.hit-cursed .card-front { border-color: #212529; border-left: 6px solid #e03131 !important; color: #212529 !important; }
@@ -44,29 +44,59 @@
         .item-description { font-size: 13px; line-height: 1.4; color: #495057; font-weight: 500; word-break: break-all; white-space: pre-wrap; }
         .mix-box { padding: 8px 14px; background-color: #f8f9fa; display: flex; align-items: center; min-height: 38px; box-sizing: border-box; flex-shrink: 0; }
         .mix-container { display: flex; align-items: center; gap: 12px; width: 100%; }
-        .badge-mix-weapon { background: #e3fafc; color: #0b7285; border: 1px solid #99e9f2; padding: 3px 6px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
-        .badge-mix-shield { background: #fff0f6; color: #c2255c; border: 1px solid #fcc2d7; padding: 3px 6px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
-        .badge-mix-both { background: #f3f0ff; color: #6741d9; border: 1px solid #d0bfff; padding: 3px 6px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        
+        .badge-mix-weapon { background: #e3fafc; color: #0b7285; border: 1px solid #99e9f2; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-mix-shield { background: #fff0f6; color: #c2255c; border: 1px solid #fcc2d7; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-mix-both { background: #f3f0ff; color: #6741d9; border: 1px solid #d0bfff; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
         .mix-label { background-color: #ffffff; padding: 1px 4px; border-radius: 12px; font-size: 9.5px; white-space: nowrap; }
         .badge-mix-weapon .mix-label { border: 1px solid #b2f2bb; color: #0b7285; }
         .badge-mix-shield .mix-label { border: 1px solid #ffdeeb; color: #c2255c; }
         .badge-mix-both .mix-label { border: 1px solid #e5dbff; color: #6741d9; }
         .badge-img { width: 14px; height: 14px; object-fit: contain; }
         .mix-effect-text { font-size: 12px; color: #212529; font-weight: bold; }
+        
         .marker-normal { background-color: #fff3bf; padding: 2px 6px; font-weight: 800; border-radius: 6px; color: #212529; display: inline-block; }
         .marker-blessed { background-color: #c3fae8; padding: 2px 6px; font-weight: 800; border-radius: 6px; color: #0b7285; display: inline-block; }
         .marker-cursed { background-color: #ff8787; padding: 2px 6px; font-weight: 800; border-radius: 6px; color: #212529; display: inline-block; }
-        
-        /* 【新機能】床落ちなしの警告バッジを赤背景×白文字で高コントラストに目立たせる設定 */
         .highlight-alert { background: #e03131; padding: 3px 8px; color: white; font-weight: bold; border-radius: 20px; margin-left: 6px; font-size: 11px; display: inline-block; box-shadow: 0 2px 6px rgba(224, 49, 49, 0.2); }
         
-        .item-icon { width: 36px; height: 36px; margin-right: 14px; object-fit: contain; }
-        .item-info { flex-grow: 1; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; margin-right: 6px; font-weight: bold; display: inline-block; margin-bottom: 4px; }
+        .item-icon { width: 36px; height: 36px; margin-right: 14px; object-fit: contain; flex-shrink: 0; }
+        .item-info { flex-grow: 1; min-width: 0; }
+        
+        /* 円形バッジのサイズと文字配置を固定化してスマホでの潰れを解消 */
+        .badge { 
+            position: absolute; 
+            right: 12px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            font-size: 11px; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-sizing: border-box;
+            text-align: center;
+            line-height: 1.2;
+        }
         .badge-normal { background: #e9ecef; color: #495057; }
         .badge-blessed { background: #fab005; color: white; }
         .badge-cursed { background: #212529; color: #ff8787; border: 1px solid #495057; }
-        .badge-pickup-count { background: #e6fcf5; color: #0ca678; border: 1px solid #96f2d7; }
+        
+        .badge-pickup-count { 
+            position: static; 
+            transform: none; 
+            width: auto; 
+            height: auto; 
+            border-radius: 20px; 
+            padding: 4px 10px; 
+            display: inline-block;
+            background: #e6fcf5; 
+            color: #0ca678; 
+            border: 1px solid #96f2d7; 
+        }
     </style>
 </head>
 <body>
@@ -85,19 +115,98 @@
     </div>
     <input type="number" id="priceInput" inputmode="numeric" pattern="[0-9]*" placeholder="値段識別はここに数字を入れてください">
     <div class="filter-group">
-        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 🛒 買値から探す</label>
-        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 💰 売値から探す</label>
+        <label class="filter-label" style="color: #4dadf7;"><input type="checkbox" id="searchBuyCheck" onchange="searchItems()"> 買値から探す</label>
+        <label class="filter-label" style="color: #f76707;"><input type="checkbox" id="searchSellCheck" onchange="searchItems()"> 売値から探す</label>
     </div>
     <div class="filter-group">
-        <label class="filter-label" style="color: #2b8a3e;"><input type="checkbox" id="blessedCheck" onchange="searchItems()"> ✨ 祝福のみ</label>
-        <label class="filter-label" style="color: #c92a2a;"><input type="checkbox" id="cursedCheck" onchange="searchItems()"> 💀 呪いのみ</label>
+        <label class="filter-label" style="color: #2b8a3e;"><input type="checkbox" id="blessedCheck" onchange="searchItems()"> 祝福のみ</label>
+        <label class="filter-label" style="color: #c92a2a;"><input type="checkbox" id="cursedCheck" onchange="searchItems()"> 呪いのみ</label>
     </div>
     <button class="reset-btn" onclick="resetForm()">リセット</button>
     <div id="resultArea" style="margin-top: 20px;"></div>
 </div>
-
 <script>
-let itemDatabase = [];
+let itemDatabase = [
+    // === 草 ===
+    { "type": "草", "name": "雑草", "buy": 20, "sell": 8, "desc": "ポリゴンにちからを下げられたときや、満腹度をほんの少し（2%）回復したいときに。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "あちち草", "buy": 40, "sell": 10, "desc": "飲むと周囲1マスの敵に火属性ダメージを与える。炎上の罠などで焼きおにぎりを作るのにも使える。", "mixType": "both", "mixDesc": "火属性ダメージ追加 / 炎無効化" },
+    { "type": "草", "name": "薬草", "buy": 40, "sell": 10, "desc": "HPを25回復する。最大HPの底上げにも使える基本の草。", "mixType": "both", "mixDesc": "HP+5" },
+    { "type": "草", "name": "毒草", "buy": 100, "sell": 40, "desc": "飲むとちからが下がり、鈍足状態になる。敵に投げつけると弱体化させられる。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "暴走の種", "buy": 100, "sell": 40, "desc": "飲むと暴走状態になり、敵味方関係なく自動で攻撃し続けるようになる。", "mixType": "shield", "mixDesc": "暴走状態を防ぐ" },
+    { "type": "草", "name": "混乱草", "buy": 100, "sell": 40, "desc": "飲むと混乱状態になる。敵に投げると同士討ちを狙える。", "mixType": "weapon", "mixDesc": "攻撃時に確率で混乱付与" },
+    { "type": "草", "name": "弟切草", "buy": 80, "sell": 30, "desc": "HPを100回復する。アンデッドに投げるとダメージ。", "mixType": "both", "mixDesc": "HP+15" },
+    { "type": "草", "name": "高飛び草", "buy": 100, "sell": 40, "desc": "飲むと同じ部屋、または別の部屋のランダムな位置へワープする。", "mixType": "shield", "mixDesc": "ワープしなくなる" },
+    { "type": "草", "name": "睡眠草", "buy": 150, "sell": 60, "desc": "飲むと数ターンの間睡眠状態になる。投げつけると敵を眠らせられる強力な草。", "mixType": "weapon", "mixDesc": "攻撃時に確率で睡眠付与" },
+    { "type": "草", "name": "目つぶし草", "buy": 150, "sell": 60, "desc": "飲むと視界が真っ暗になる。敵に投げると目つぶし状態にし、軸をずらして逃げられる。", "mixType": "weapon", "mixDesc": "攻撃時に確率で目つぶし付与" },
+    { "type": "草", "name": "めぐすり草", "buy": 150, "sell": 60, "desc": "飲むとそのフロアの間だけ罠が見えるようになり、隠れた敵も視認可能になる。", "mixType": "weapon", "mixDesc": "一ツ目属性特効" },
+    { "type": "草", "name": "癒やし草", "buy": 200, "sell": 80, "desc": "HPを完全に回復し、ちから以外の状態異常も治す優秀な回復アイテム。", "mixType": "both", "mixDesc": "HP+20" },
+    { "type": "草", "name": "すばやさ草", "buy": 300, "sell": 120, "desc": "一定時間、倍速行動状態になる。ピンチからの脱出に最適。", "mixType": "weapon", "mixDesc": "連続攻撃確率アップ" },
+    { "type": "草", "name": "幸せの種", "buy": 400, "sell": 160, "desc": "レベルが1上がる。マゼルン等の合成で敵のレベルを上げて経験値を稼ぐ用途にも。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "復活の草", "buy": 400, "sell": 160, "desc": "倒れたときに自動で復活する。倒れるまではアイテム欄に持っておくだけで機能する。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "無敵草", "buy": 600, "sell": 240, "desc": "一定時間、あらゆるダメージを受け付けなくなる強力な草。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "天使の種", "buy": 2000, "sell": 800, "desc": "レベルが3上がる。非常に貴重。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "超不幸の種", "buy": 2000, "sell": 800, "desc": "飲むとレベルが1になり、最大HPも減少する最凶のマイナスアイテム。", "mixType": "none", "mixDesc": "合成不可" },
+    { "type": "草", "name": "いのちの草", "buy": 500, "sell": 200, "desc": "最大HPが5上がる。最大HPを底上げする基本の草。", "mixType": "both", "mixDesc": "最大HP+5" },
+    { "type": "草", "name": "ちからの草", "buy": 700, "sell": 280, "desc": "ちからの現在値と最大値が1上がる。攻撃力の底上げに不可欠。", "mixType": "weapon", "mixDesc": "ちからに応じてダメージ増加" },
+    // === 巻物 ===
+    { "type": "巻物", "name": "識別の巻物", "buy": 300, "sell": 120, "desc": "アイテムを識別する。確率で持ち物すべてが識別されることもある。" },
+    { "type": "巻物", "name": "混乱の巻物", "buy": 300, "sell": 120, "desc": "部屋の中の敵全員を混乱状態にする。" },
+    { "type": "巻物", "name": "バクスイの巻物", "buy": 300, "sell": 120, "desc": "部屋の中の敵全員を睡眠状態にするが、効果が解けると敵が倍速状態になる。" },
+    { "type": "巻物", "name": "真空斬りの巻物", "buy": 300, "sell": 120, "desc": "部屋の中の敵全員にダメージを与える。モンスターハウスで有効。" },
+    { "type": "巻物", "name": "あかりの巻物", "buy": 400, "sell": 160, "desc": "フロアのマップ構造とモンスター・アイテムの位置がすべて見えるようになる。" },
+    { "type": "巻物", "name": "メッキの巻物", "buy": 400, "sell": 160, "desc": "武器や盾にサビよけの印をつける。" },
+    { "type": "巻物", "name": "おはらいの巻物", "buy": 600, "sell": 240, "desc": "アイテムの呪いや道具封印状態を解除する。" },
+    { "type": "巻物", "name": "天の恵みの巻物", "buy": 800, "sell": 320, "desc": "装備している武器の修正値を+1する。" },
+    { "type": "巻物", "name": "地の恵みの巻物", "buy": 800, "sell": 320, "desc": "装備している盾の修正値を+1する。" },
+    { "type": "巻物", "name": "吸い出しの巻物", "buy": 1000, "sell": 400, "desc": "壺の中身を床にぶちまけずに取り出すことができる。" },
+    { "type": "巻物", "name": "白紙の巻物", "buy": 1000, "sell": 400, "desc": "読んだことのある巻物の名前を書き込んで、その巻物として使用できる最強の巻物。" },
+    { "type": "巻物", "name": "ねだやしの巻物", "buy": 10000, "sell": 4000, "desc": "投げつけたモンスターと同種のモンスターを、その冒険の間出現しなくさせる。" },
+
+    // === 腕輪 ===
+    { "type": "腕輪", "name": "遠投の腕輪", "buy": 1200, "sell": 480, "desc": "投げたアイテムがキャラクターや壁を貫通してまっすぐ飛んでいくようになる。" },
+    { "type": "腕輪", "name": "しあわせの腕輪", "buy": 1200, "sell": 480, "desc": "歩くたびに経験値を1ずつ獲得する。" },
+    { "type": "腕輪", "name": "ちからの腕輪", "buy": 2000, "sell": 800, "desc": "装備するとちからの最大値が3上がる。2つ装備すると効果が重複する。" },
+    { "type": "腕輪", "name": "混乱よけの腕輪", "buy": 3000, "sell": 1200, "desc": "混乱状態になるのを完全に防ぐ。" },
+    { "type": "腕輪", "name": "睡眠よけの腕輪", "buy": 3000, "sell": 1200, "desc": "睡眠状態になるのを完全に防ぐ。" },
+    { "type": "腕輪", "name": "錆よけの腕輪", "buy": 3000, "sell": 1200, "desc": "特殊攻撃によるちからの低下や、装備のサビを防ぐ。" },
+    { "type": "腕輪", "name": "高飛びの腕輪", "buy": 4000, "sell": 1600, "desc": "一定歩数ごとに別の部屋のランダムな位置へワープする。" },
+    { "type": "腕輪", "name": "気配察知の腕輪", "buy": 5000, "sell": 2000, "desc": "フロアにいるモンスターの位置がマップ上に赤点で常に見えるようになる超重要腕輪。" },
+    { "type": "腕輪", "name": "道具感知の腕輪", "buy": 5000, "sell": 2000, "desc": "フロアにあるアイテムの位置がマップ上に緑点で常に見えるようになる。" },
+    { "type": "腕輪", "name": "壁抜けの腕輪", "buy": 5000, "sell": 2000, "desc": "壁の中を移動できるようになるが、壁の中にいる間はターン毎にHPが減少する。" },
+    { "type": "腕輪", "name": "透視の腕輪", "buy": 7500, "sell": 3000, "desc": "モンスターとアイテムの両方の位置が常に見えるようになる最高峰の腕輪。" },
+    { "type": "腕輪", "name": "弾きよけの腕輪", "buy": 7500, "sell": 3000, "desc": "ケンゴウ種などの装備弾き攻撃や、袋荒らし種のアイテム弾きを防ぐ。" },
+    { "type": "腕輪", "name": "鑑定師の腕輪", "buy": 10000, "sell": 4000, "desc": "拾ったアイテムが最初からすべて識別状態になる幻の腕輪。" },
+    // === 杖 (床落ち回数: 3~5) ===
+    { "type": "杖", "name": "ただの杖", "buy": 200, "sell": 80, "min": 3, "max": 5, "desc": "振っても何も起きない識別用・マゼルン合成用の杖。" },
+    { "type": "杖", "name": "加減の杖", "buy": 400, "sell": 160, "min": 3, "max": 5, "desc": "当たったモンスターのHPを1にする。トドメを刺して経験値を得るのに便利。" },
+    { "type": "杖", "name": "かなしばりの杖", "buy": 500, "sell": 200, "min": 3, "max": 5, "desc": "当たったモンスターをかなしばり状態（行動不能）にする。攻撃するかダメージを受けると解除される。" },
+    { "type": "杖", "name": "封印の杖", "buy": 500, "sell": 200, "min": 3, "max": 5, "desc": "当たったモンスターの特殊能力や魔法を封じる。脳筋モンスター化させる。" },
+    { "type": "杖", "name": "吹き飛ばしの杖", "buy": 500, "sell": 200, "min": 3, "max": 5, "desc": "当たったモンスターを5マス先まで吹き飛ばす。壁や他の敵に当たると固定ダメージ。" },
+    { "type": "杖", "name": "場所替えの杖", "buy": 500, "sell": 200, "min": 3, "max": 5, "desc": "当たったモンスターやNPCとシレンの位置を入れ替える。泥棒や逃走に大活躍。" },
+    { "type": "杖", "name": "飛びつきの杖", "buy": 500, "sell": 200, "min": 3, "max": 5, "desc": "振った方向に飛びつき、壁や敵の目の前のマスまで一瞬で移動する。" },
+    { "type": "杖", "name": "一時しのぎの杖", "buy": 700, "sell": 280, "min": 3, "max": 5, "desc": "当たったモンスターを階段の上にワープさせ、かなしばり状態にする。" },
+    { "type": "杖", "name": "痛み分けの杖", "buy": 700, "sell": 280, "min": 3, "max": 5, "desc": "当たったモンスターとシレンをリンクさせ、シレンが受けたダメージを相手にも与える。" },
+    { "type": "杖", "name": "トンネルの杖", "buy": 700, "sell": 280, "min": 3, "max": 5, "desc": "振った方向の壁を一直線に掘り進む。直線上の敵には固定ダメージ。" },
+    { "type": "杖", "name": "ガイコツまどうの杖", "buy": 700, "sell": 280, "min": 3, "max": 5, "desc": "ワープ、鈍足、混乱、かなしばりのいずれかの効果がランダムで発動する。" },
+    { "type": "杖", "name": "身代わりの杖", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "当たったモンスターをシレンの身代わりに仕立て上げる。周囲の敵が身代わりを攻撃し始める。" },
+    { "type": "杖", "name": "幸せの杖", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "当たったモンスターのレベルを上げる。経験値稼ぎに利用可能。" },
+    { "type": "杖", "name": "不幸の杖", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "当たったモンスターのレベルを下げる。強敵を弱体化させるのに便利。" },
+
+    // === 壺 (床落ち容量: 3~5 ※合成・強化を除く) ===
+    { "type": "壺", "name": "識別の壺", "buy": 500, "sell": 200, "min": 3, "max": 5, "desc": "中に入れたアイテムが即座に識別される便利な壺。" },
+    { "type": "壺", "name": "変化の壺", "buy": 800, "sell": 320, "min": 3, "max": 5, "desc": "中に入れたアイテムが別のランダムなアイテムに変化する壺。矢などを入れるのが基本。" },
+    { "type": "壺", "name": "保存の壺", "buy": 800, "sell": 320, "min": 3, "max": 5, "desc": "中のアイテムを自由に出し入れできる最も基本的な壺。中のアイテムはアイテム欄を圧迫しない。" },
+    { "type": "壺", "name": "トドの壺", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "押すと目の前の直線上にいるアイテムや店の商品を盗んで戻ってくる便利な壺。" },
+    { "type": "壺", "name": "換金の壺", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "中に入れたアイテムが即座にギタン（お金）に変わる壺。" },
+    { "type": "壺", "name": "手封じの壺", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "手を入れるとシレンが手封じ状態になり、攻撃やアイテム使用が制限されるマイナス壺。" },
+    { "type": "壺", "name": "割れない壺", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "投げても壁に当てても絶対に割れない壺。吸い出しの巻物でのみ中身を取り出せる。" },
+    { "type": "壺", "name": "お蔵の壺", "buy": 1000, "sell": 400, "min": 3, "max": 5, "desc": "入れたアイテムが即座に「ダンジョン内の倉庫」へと転送される壺。" },
+    { "type": "壺", "name": "底抜けの壺", "buy": 1500, "sell": 600, "min": 3, "max": 5, "desc": "アイテムを入れると消滅する。割るとそのマスに落とし穴の罠が出現する強力な泥棒ツール。" },
+    { "type": "壺", "name": "魔物の壺", "buy": 1500, "sell": 600, "min": 3, "max": 5, "desc": "押すと周囲にモンスターが多数出現する危険な壺。水路で使ってアイテムを稼ぐ小技も。" },
+    { "type": "壺", "name": "回復の壺", "buy": 1500, "sell": 600, "min": 3, "max": 5, "desc": "押すとシレンのHPが完全に回復するピンチ救済用の壺。" },
+    { "type": "壺", "name": "合成 of 壺", "buy": 6000, "sell": 2400, "min": 3, "max": 4, "desc": "武器や盾、アイテムを入れて能力（印）を合成するための超重要壺。床落ちは容量3〜4が基本。" },
+    { "type": "壺", "name": "強化の壺", "buy": 10000, "sell": 4000, "min": 2, "max": 3, "desc": "フロアを進むごとに、中に入れた武器や盾の修正値が+1されていく夢の壺。" }
+];
 const priceInput = document.getElementById('priceInput');
 const searchBuyCheck = document.getElementById('searchBuyCheck');
 const searchSellCheck = document.getElementById('searchSellCheck');
@@ -119,18 +228,7 @@ function changeCategory(category) {
 }
 
 priceInput.addEventListener('input', searchItems);
-priceInput.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
 
-async function loadDatabase() {
-    try {
-        const response = await fetch('./items.json');
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        itemDatabase = await response.json();
-        searchItems();
-    } catch (error) {
-        resultArea.innerHTML = `<p style="color:red; text-align:center;">データの読み込みに失敗しました。</p>`;
-    }
-}
 function searchItems() {
     const value = parseInt(priceInput.value);
     const filterBuy = searchBuyCheck.checked;
@@ -144,30 +242,27 @@ function searchItems() {
     if (isNaN(value)) {
         let defaultList = [];
         itemDatabase.forEach(item => {
-            if (typeof item === 'string' || item.type !== currentCategory) return;
+            if (item.type !== currentCategory) return;
             const pMin = item.min !== undefined ? parseInt(item.min) : 3;
             const pMax = item.max !== undefined ? parseInt(item.max) : 5;
             const pickupText = (item.type === '杖' || item.type === '壺') ? `${pMin}~${pMax}` : null;
 
             if (!showBlessed && !showCursed) {
-                defaultList.push({ ...item, displayName: item.name, state: '通常', calcBuy: item.buy, calcSell: item.sell, isMixable: !!item.mix, isPredicted: false, pickupText: pickupText, isDefaultShow: !!pickupText });
+                defaultList.push({ ...item, displayName: item.name, state: '通常', calcBuy: item.buy, calcSell: item.sell, isMixable: !!item.mixType && item.mixType !== 'none', isPredicted: false, pickupText: pickupText, isDefaultShow: !!pickupText });
             }
             if (showBlessed && (item.type === '草' || item.type === '巻物')) {
-                defaultList.push({ ...item, displayName: item.name, state: '祝福', calcBuy: item.buy * 2, calcSell: item.sell * 2, isMixable: !!item.mix, isPredicted: false, pickupText: pickupText, isDefaultShow: false });
+                defaultList.push({ ...item, displayName: item.name, state: '祝福', calcBuy: item.buy * 2, calcSell: item.sell * 2, isMixable: !!item.mixType && item.mixType !== 'none', isPredicted: false, pickupText: pickupText, isDefaultShow: false });
             }
             if (showCursed) {
                 let cBuy, cSell;
-                if (item.type === '杖') {
-                    cBuy = Math.floor((item.buy + (100 * pMin)) * 0.87);
-                    cSell = Math.floor((item.sell + (40 * pMin)) * 0.87);
-                } else if (item.type === '壺') {
+                if (item.type === '杖' || item.type === '壺') {
                     cBuy = Math.floor((item.buy + (100 * pMin)) * 0.87);
                     cSell = Math.floor((item.sell + (40 * pMin)) * 0.87);
                 } else {
                     cBuy = Math.floor(item.buy * 0.87);
                     cSell = Math.floor(item.sell * 0.87);
                 }
-                defaultList.push({ ...item, displayName: item.name, state: '呪い', calcBuy: cBuy, calcSell: cSell, isMixable: !!item.mix, isPredicted: false, pickupText: pickupText, isDefaultShow: !!pickupText });
+                defaultList.push({ ...item, displayName: item.name, state: '呪い', calcBuy: cBuy, calcSell: cSell, isMixable: !!item.mixType && item.mixType !== 'none', isPredicted: false, pickupText: pickupText, isDefaultShow: !!pickupText });
             }
         });
         displayResults(defaultList, value, activeBuy, activeSell);
@@ -176,20 +271,17 @@ function searchItems() {
 
     let results = [];
     itemDatabase.forEach(item => {
-        if (typeof item === 'string' || item.type !== currentCategory) return;
-        const isMixable = !!item.mix;
+        if (item.type !== currentCategory) return;
+        const isMixable = !!item.mixType && item.mixType !== 'none';
         const pMin = item.min !== undefined ? parseInt(item.min) : 3;
         const pMax = item.max !== undefined ? parseInt(item.max) : 5;
         const pickupText = `${pMin}~${pMax}`;
 
         if (item.type === '杖') {
             const cleanName = item.name.replace(/\(\d+\)/, '');
-            const baseBuy = item.buy;
-            const baseSell = item.sell;
-
             for (let c = 0; c <= 7; c++) {
-                const nBuy = baseBuy + (100 * c);
-                const nSell = baseSell + (40 * c);
+                const nBuy = item.buy + (100 * c);
+                const nSell = item.sell + (40 * c);
                 const cBuy = Math.floor(nBuy * 0.87);
                 const cSell = Math.floor(nSell * 0.87);
                 const isWithinRange = (c >= pMin && c <= pMax);
@@ -203,12 +295,9 @@ function searchItems() {
             }
         } else if (item.type === '壺') {
             const cleanName = item.name.replace(/\(\d+\)/, '');
-            const baseBuy = item.buy;
-            const baseSell = item.sell;
-
             for (let cap = 0; cap <= 6; cap++) {
-                const nBuy = baseBuy + (100 * cap);
-                const nSell = baseSell + (40 * cap);
+                const nBuy = item.buy + (100 * cap);
+                const nSell = item.sell + (40 * cap);
                 const cBuy = Math.floor(nBuy * 0.87);
                 const cSell = Math.floor(nSell * 0.87);
                 const isWithinRange = (cap >= pMin && cap <= pMax);
@@ -244,8 +333,6 @@ function displayResults(items, value, activeBuy, activeSell) {
         resultArea.innerHTML = `<p style="text-align:center; color:#868e96; margin-top:20px;">一致する道具が見つかりませんでした。</p>`;
         return;
     }
-
-    // 【新機能】床落ちしている正常なアイテム（isNotOnFloor が false）を上に、床落ちなしを下に自動ソート
     items.sort((a, b) => (a.isNotOnFloor === b.isNotOnFloor) ? 0 : a.isNotOnFloor ? 1 : -1);
 
     let html = '';
@@ -255,13 +342,12 @@ function displayResults(items, value, activeBuy, activeSell) {
     } else {
         const buyMatches = items.filter(i => i.matchType === '買値');
         const sellMatches = items.filter(i => i.matchType === '売値');
-
         if (activeBuy && buyMatches.length > 0) {
-            html += `<h3>🛒 買値が ${value} ギタン</h3>`;
+            html += `<h3> 買値が ${value} ギタン</h3>`;
             buyMatches.forEach(item => html += renderItemRow(item, true));
         }
         if (activeSell && sellMatches.length > 0) {
-            html += `<h3>💰 売値が ${value} ギタン</h3>`;
+            html += `<h3> 売値が ${value} ギタン</h3>`;
             sellMatches.forEach(item => html += renderItemRow(item, true));
         }
     }
@@ -274,15 +360,10 @@ function renderItemRow(item, showMatchPrice) {
     if (item.state === '呪い') badgeClass = 'badge-cursed';
 
     let iconName = 'kusa.png';
-    if (item.type === '武器') iconName = 'buki.png';
-    else if (item.type === '盾') iconName = 'tate.png';
-    else if (item.icon) iconName = item.icon;
-    else {
-        if (item.type === '巻物') iconName = 'makimono.png';
-        if (item.type === '杖') iconName = 'tue.png';
-        if (item.type === '腕輪') iconName = 'udawa.png';
-        if (item.type === '壺') iconName = 'tubo.png';
-    }
+    if (item.type === '巻物') iconName = 'makimono.png';
+    if (item.type === '杖') iconName = 'tue.png';
+    if (item.type === '腕輪') iconName = 'udawa.png';
+    if (item.type === '壺') iconName = 'tubo.png';
 
     const fullIconPath = `images/${iconName}`;
     let pickupBadge = '';
@@ -290,10 +371,7 @@ function renderItemRow(item, showMatchPrice) {
         pickupBadge = `<span class="badge badge-pickup-count">拾える回数 ${item.pickupText}</span>`;
     }
 
-    // 【修正】床落ちなしの警告文をバッジ形式にして視認性を大幅強化
-    const alertNote = item.isNotOnFloor ? `<span class="highlight-alert">🚨 床落ちなし</span>` : '';
-    
-    // 【新機能】床落ちなしの場合、カード正面のクラス（hit-not-floor）を追加付与する
+    const alertNote = item.isNotOnFloor ? `<span class="highlight-alert"> 床落ちなし</span>` : '';
     let floorClass = item.isNotOnFloor ? 'hit-not-floor' : '';
     let priceDetails = '';
     let hitClass = 'hit-normal';
@@ -315,21 +393,15 @@ function renderItemRow(item, showMatchPrice) {
     const mixDescText = item.mixDesc || "---";
     
     let mixTypeHtml = '';
-    if (item.isMixable || item.mixType) {
+    if (item.isMixable || (item.mixType && item.mixType !== 'none')) {
         if (item.mixType === '武器' || item.mixType === 'weapon') {
-            mixTypeHtml = `<span class="badge-mix-weapon"><span class="mix-label">異種合成</span> <img src="images/buki.png" class="badge-img" onerror="this.style.display='none'"> 武器</span>`;
+            mixTypeHtml = `<span class="badge-mix-weapon"><span class="mix-label">異種合成</span> 武器</span>`;
         } else if (item.mixType === '盾' || item.mixType === 'shield') {
-            mixTypeHtml = `<span class="badge-mix-shield"><span class="mix-label">異種合成</span> <img src="images/tate.png" class="badge-img" onerror="this.style.display='none'"> 盾</span>`;
+            mixTypeHtml = `<span class="badge-mix-shield"><span class="mix-label">異種合成</span> 盾</span>`;
         } else if (item.mixType === '両方' || item.mixType === 'both') {
-            mixTypeHtml = `<span class="badge-mix-both"><span class="mix-label">異種合成</span> <img src="images/buki.png" class="badge-img" onerror="this.style.display='none'"> 武器 <img src="images/tate.png" class="badge-img" onerror="this.style.display='none'"> 盾</span>`;
-        } else {
-            mixTypeHtml = `<span class="badge-mix-both" style="background:#e8dbff; color:#6f42c1; border-color:#d0bfff;"><span class="mix-label" style="border-color:#bdf0ff; color:#6f42c1;">異種合成</span> 異種</span>`;
+            mixTypeHtml = `<span class="badge-mix-both"><span class="mix-label">異種合成</span> 武器/盾</span>`;
         }
-    } else {
-        mixTypeHtml = `<span style="font-size:11px; color:#adb5bd; font-weight:bold; white-space:nowrap; flex-shrink:0;">! 合成不可</span>`;
     }
-
-    const frontMixBadge = (item.isMixable || item.mixType) ? mixTypeHtml : '';
 
     return `
     <div class="result-card ${hitClass} ${floorClass}" id="card-${item.name}">
@@ -339,13 +411,13 @@ function renderItemRow(item, showMatchPrice) {
                 <div class="item-info">
                     <div style="font-weight:bold; font-size:15px; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
                         <span>${item.displayName}</span>
-                        ${frontMixBadge}
+                        ${mixTypeHtml}
                         ${pickupBadge}
                     </div>
                     ${priceDetails}
                 </div>
                 <span class="badge ${badgeClass}">${item.state}</span>
-                <span class="flip-guide">💡 タップで詳細</span>
+                <span class="flip-guide">タップで詳細</span>
             </div>
             <div class="card-back">
                 <div class="desc-box">
@@ -353,7 +425,7 @@ function renderItemRow(item, showMatchPrice) {
                 </div>
                 <div class="mix-box">
                     <div class="mix-container">
-                        ${mixTypeHtml}
+                        ${mixTypeHtml || '<span style="font-size:11px; color:#adb5bd; font-weight:bold;">! 合成不可</span>'}
                         <div class="mix-effect-text">${mixDescText}</div>
                     </div>
                 </div>
@@ -378,7 +450,7 @@ function resetForm() {
     searchItems();
 }
 
-loadDatabase();
+searchItems();
 </script>
 </body>
 </html>
